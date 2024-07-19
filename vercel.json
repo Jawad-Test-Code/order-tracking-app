@@ -2,7 +2,7 @@
   "version": 2,
   "builds": [
     {
-      "src": "./web/index.js",
+      "src": "web/frontend/components/OrdersReadyToShip.jsx",
       "use": "@vercel/node"
     }
   ],
