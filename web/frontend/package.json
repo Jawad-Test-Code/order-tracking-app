@@ -10,7 +10,7 @@
   },
   "type": "module",
   "engines": {
-    "node": ">= 12.16"
+    "node": ">=16.x"
   },
   "stylelint": {
     "extends": "@shopify/stylelint-polaris"
