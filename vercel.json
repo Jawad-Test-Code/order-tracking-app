@@ -1,11 +1,11 @@
 {
-  "version": 2,
+  "version": 3,
   "builds": [
     {
       "src": "web/frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "web/frontend/build"
+        "distDir": "web/frontend/dist"
       }
     },
     {
@@ -20,7 +20,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/web/frontend/build/$1"
+      "dest": "/web/frontend/dist/$1"
     }
   ]
 }
