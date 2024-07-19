@@ -3,7 +3,7 @@
 client_id = "d2550c1d4d2c223983d0ffdfc866c316"
 name = "order-tracking-app"
 handle = "order-tracking-app-10"
-application_url = "https://order-tracking-app-front.vercel.app/?host=admin.myshopify.com"
+application_url = "https://order-tracking-app-deploy.vercel.app/?host=admin.myshopify.com"
 embedded = true
 
 [build]
@@ -17,18 +17,18 @@ scopes = "read_customers,read_inventory,read_orders,read_products,write_customer
 
 [auth]
 redirect_urls = [
-  "https://order-tracking-app-front-jsc9cs634-jawad-akrams-projects.vercel.app/api/auth",
-  "https://order-tracking-app-front-jsc9cs634-jawad-akrams-projects.vercel.app/auth/callback",
-  "https://order-tracking-app-front-jsc9cs634-jawad-akrams-projects.vercel.app/api/auth/callback",
-  "https://order-tracking-app-front-jsc9cs634-jawad-akrams-projects.vercel.app/auth/shopify/callback",
-  "https://order-tracking-app-front.vercel.app/api/auth?host=admin.myshopify.com"
+  "https://order-tracking-app-deploy-jsc9cs634-jawad-akrams-projects.vercel.app/api/auth",
+  "https://order-tracking-app-deploy-jsc9cs634-jawad-akrams-projects.vercel.app/auth/callback",
+  "https://order-tracking-app-deploy-jsc9cs634-jawad-akrams-projects.vercel.app/api/auth/callback",
+  "https://order-tracking-app-deploy-jsc9cs634-jawad-akrams-projects.vercel.app/auth/shopify/callback",
+  "https://order-tracking-app-deploy.vercel.app/api/auth?host=admin.myshopify.com"
 ]
 
 [webhooks]
 api_version = "2024-07"
 
 [app_proxy]
-url = "https://order-tracking-app-front.vercel.app/api/auth?host=admin.myshopify.com"
+url = "https://order-tracking-app-deploy.vercel.app/api/auth?host=admin.myshopify.com"
 subpath = "proxy"
 prefix = "apps"
 
