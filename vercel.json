@@ -22,10 +22,5 @@
       "src": "/(.*)",
       "dest": "/web/frontend/dist/$1"
     }
-  ],
-  "build": {
-    "env": {
-      "NODE_VERSION": "18.20.0"
-    }
-  }
+  ]
 }
