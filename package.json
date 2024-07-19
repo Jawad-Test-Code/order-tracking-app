@@ -12,6 +12,8 @@
     "deploy": "shopify app deploy"
   },
   "dependencies": {
+    "@shopify/cli": "^3.64.0",
+    "nodemon": "^3.1.4",
     "shopify-api-node": "^3.13.1"
   },
   "author": "jawad",

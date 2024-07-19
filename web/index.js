@@ -101,7 +101,7 @@ app.get('/api/orders/ready-to-ship', async (req, res) => {
 
     
     // Extract Variant IDs
-    const productVariantIds = ordersData?.flatMap(order => {
+    const productVariantIds = ordersData && ordersData?.flatMap(order => {
       return order.line_items?.map(lineItem => {
         return lineItem.variant_id;
         });
@@ -185,7 +185,8 @@ app.get('/api/orders/ready-to-ship', async (req, res) => {
     
     // console.log('productTitleMap :', productTitleMap);
 
-    
+    const firstStockMap = {};
+    const maxOnHandStockMap = {};
 
     // Construct the response data
     const responseData = ordersData?.map(order => {
@@ -202,11 +203,24 @@ app.get('/api/orders/ready-to-ship', async (req, res) => {
         if (inventoryData) {
           const committed = lineItem.fulfillable_quantity;
           const available = inventoryData.available;
-          const onHand = available + committed;
+          // let onHand = 0;
+
+          // Update the firstStockMap with available stock and cumulative committed stock
+          if (firstStockMap[lineItem.variant_id] !== undefined) {
+            firstStockMap[lineItem.variant_id].committed += committed;
+          } else {
+            firstStockMap[lineItem.variant_id] = {
+              available: available,
+              committed: committed,
+              // onHand: onHand,
+            };
+          }
+
+          const onHand = firstStockMap[lineItem.variant_id].committed + firstStockMap[lineItem.variant_id].available;
           
-          console.log('committed :', committed);
-          console.log('available :', available);
-          console.log('onHand :', onHand);
+          // console.log('committed :', committed);
+          // console.log('available :', available);
+          // console.log('onHand :', onHand);
 
 
           return {
@@ -229,14 +243,26 @@ app.get('/api/orders/ready-to-ship', async (req, res) => {
         }
       });
 
+      // Determine the maximum onHand_Stock for each variant_id
+      lineItems?.forEach(lineItem => {
+        const currentOnHand = lineItem.onHand_Stock;
+        if (!maxOnHandStockMap[lineItem.variant_id] || currentOnHand > maxOnHandStockMap[lineItem.variant_id]) {
+          maxOnHandStockMap[lineItem.variant_id] = currentOnHand;
+        }
+      });
+
+    // console.log('lineItems :', lineItems);
+
       return {
         orderId: order.id,
         orderNumber: order.name,
+        orderDate: order.created_at,
         total_price: order.total_price,
         customer: order.customer,
         financial_status: order.financial_status,
         fulfillment_status: order.fulfillment_status,
         line_items: lineItems,
+        maxOnHandStockMap: maxOnHandStockMap,
       };
     });
     // console.log('responseData :', responseData);

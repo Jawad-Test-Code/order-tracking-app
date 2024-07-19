@@ -45,6 +45,10 @@ The following Shopify tools complement these third-party tools to ease app devel
 - [File-based routing](https://github.com/Shopify/shopify-frontend-template-react/blob/main/Routes.jsx) makes creating new pages easier.
 - [`@shopify/i18next-shopify`](https://github.com/Shopify/i18next-shopify) is a plugin for [`i18next`](https://www.i18next.com/) that allows translation files to follow the same JSON schema used by Shopify [app extensions](https://shopify.dev/docs/apps/checkout/best-practices/localizing-ui-extensions#how-it-works) and [themes](https://shopify.dev/docs/themes/architecture/locales/storefront-locale-files#usage).
 
+
+
+
+<!--            INSTALLATION                -->
 ## Getting started
 
 ### Requirements
@@ -52,6 +56,8 @@ The following Shopify tools complement these third-party tools to ease app devel
 1. You must [download and install Node.js](https://nodejs.org/en/download/) if you don't already have it.
 1. You must [create a Shopify partner account](https://partners.shopify.com/signup) if you don’t have one.
 1. You must create a store for testing if you don't have one, either a [development store](https://help.shopify.com/en/partners/dashboard/development-stores#create-a-development-store) or a [Shopify Plus sandbox store](https://help.shopify.com/en/partners/dashboard/managing-stores/plus-sandbox-store).
+
+
 
 ### Installing the template
 
@@ -77,6 +83,23 @@ pnpm create @shopify/app@latest --template=node
 
 This will clone the template and install the required dependencies.
 
+
+
+### Installing the Required Dependencies
+
+Insatll Shopify CLI:
+```shell
+npm install @shopify/cli
+```
+
+Web Folder
+   -> npm install
+
+   -> frontend Folder
+      -> npm install
+
+
+
 #### Local Development
 
 [The Shopify CLI](https://shopify.dev/docs/apps/tools/cli) connects to an app in your Partners dashboard. It provides environment variables, runs commands in parallel, and updates application URLs for easier development.
@@ -93,6 +116,10 @@ Using npm:
 
 ```shell
 npm run dev
+
+OR
+
+shopify app dev
 ```
 
 Using pnpm:
@@ -102,6 +129,14 @@ pnpm run dev
 ```
 
 Open the URL generated in your console. Once you grant permission to the app, you can start development.
+
+
+
+## Test the App
+Go to -> Shopify PARTNERS -> Apps -> Select App -> Test your app -> Select Store -> Install app
+
+
+
 
 ## Deployment
 

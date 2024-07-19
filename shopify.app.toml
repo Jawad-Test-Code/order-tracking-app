@@ -1,14 +1,14 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
-client_id = "19e0c4fbcf358179cdc16407e4be5497"
-name = "order-app"
-handle = "order-app-67"
-application_url = "https://instructors-homeless-invited-bids.trycloudflare.com"
+client_id = "20e54f04f6afbfbada0064024fc3c1a1"
+name = "order-tracking-app"
+handle = "order-tracking-app-9"
+application_url = "https://malta-sheets-incident-triumph.trycloudflare.com"
 embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-dev_store_url = "quickstart-ac056c65.myshopify.com"
+dev_store_url = "dev-store-testing-apps.myshopify.com"
 include_config_on_deploy = true
 
 [access_scopes]
@@ -17,13 +17,18 @@ scopes = "read_customers,read_inventory,read_orders,read_products,write_customer
 
 [auth]
 redirect_urls = [
-  "https://instructors-homeless-invited-bids.trycloudflare.com/auth/callback",
-  "https://instructors-homeless-invited-bids.trycloudflare.com/auth/shopify/callback",
-  "https://instructors-homeless-invited-bids.trycloudflare.com/api/auth/callback"
+  "https://malta-sheets-incident-triumph.trycloudflare.com/auth/callback",
+  "https://malta-sheets-incident-triumph.trycloudflare.com/auth/shopify/callback",
+  "https://malta-sheets-incident-triumph.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
-api_version = "2024-04"
+api_version = "2024-07"
+
+[app_proxy]
+url = "https://malta-sheets-incident-triumph.trycloudflare.com"
+subpath = "proxy"
+prefix = "apps"
 
 [pos]
 embedded = false

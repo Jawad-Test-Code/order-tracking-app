@@ -41,7 +41,7 @@ export function OrdersReadyToShip() {
                 headers: { "Content-Type": "application/json" },
             });
             let ordersData = await request.json();
-            console.log('ordersData ----- :', ordersData);
+            // console.log('ordersData ----- :', ordersData);
 
             setOrdersData(ordersData);
         } catch (error) {
@@ -64,29 +64,88 @@ export function OrdersReadyToShip() {
     };
 
     console.log('ordersData  :', ordersData);
+    // const rows = useMemo(() => {
+    //     return ordersData.flatMap(order => (
+    //         order.line_items?.map(item => {
+    //             // const fulfillmentStatus = order.fulfillment_status || 'Unfulfilled';
+    //             const variantId = item.variant_id;
+    //             const maxOnHandStock = order.maxOnHandStockMap?.[variantId] || 0;
+    //             // Update onHand_Stock if it exists in maxOnHandStockMap for this variant_id
+    //             if (maxOnHandStock !== undefined) {
+    //                 item.onHand_Stock = maxOnHandStock;
+    //             }
+
+    //             return [
+    //                 order.orderId,
+    //                 order.orderNumber,
+    //                 // item.product_title || 'Not Available',
+    //                 order.customer && order.customer.first_name && order.customer.last_name
+    //                     ? `${order.customer.first_name} ${order.customer.last_name}`
+    //                     : 'No Customer',
+    //                 `Rs ${order.total_price}`,
+    //                 order.financial_status,
+    //                 order.fulfillment_status || 'Unfulfilled',
+    //                 // <div style={{ backgroundColor: fulfillmentStatus === 'Unfulfilled' ? '#ffeb78' : 'transparent' }}>
+    //                 //     {fulfillmentStatus}
+    //                 // </div>,
+    //                 `${item.committed_Stock}  items`,
+    //                 // `${item.available_Stock || 0} in Stock`,
+    //                 `${item.onHand_Stock || 0} in Stock`,
+    //             ]
+    //         })
+    //     ));
+    // }, [ordersData]);
+
     const rows = useMemo(() => {
-        return ordersData.flatMap(order => (
-            order.line_items?.map(item => {
-                // const fulfillmentStatus = order.fulfillment_status || 'Unfulfilled';
-                return [
-                    order.orderId,
-                    order.orderNumber,
-                    // item.product_title || 'Not Available',
-                    order.customer && order.customer.first_name && order.customer.last_name
-                        ? `${order.customer.first_name} ${order.customer.last_name}`
-                        : 'No Customer',
-                    `Rs ${order.total_price}`,
-                    order.financial_status,
-                    order.fulfillment_status || 'Unfulfilled',
-                    // <div style={{ backgroundColor: fulfillmentStatus === 'Unfulfilled' ? '#ffeb78' : 'transparent' }}>
-                    //     {fulfillmentStatus}
-                    // </div>,
-                    `${item.committed_Stock}  items`,
-                    `${item.available_Stock || 0} in Stock`,
-                ]
-            })
-        ));
+        // Flatten ordersData into a single list of items
+        const allItems = ordersData && ordersData?.flatMap(order => {
+            return order.line_items?.map(item => ({
+                order,
+                item
+            })) || [];
+        });
+
+        // Create a map to track the first created order per variant meeting the criteria
+        const firstOrderPerVariantMap = new Map();
+
+        // Filter orders based on criteria and store the first created order per variant in the map
+        allItems.forEach(({ order, item }) => {
+            const variantId = item.variant_id;
+            const maxOnHandStock = order.maxOnHandStockMap?.[variantId] || 0;
+            item.onHand_Stock = maxOnHandStock;
+
+            if (item.committed_Stock === item.onHand_Stock && item.available_Stock < 0) {
+                if (!firstOrderPerVariantMap.has(variantId) || new Date(order.orderDate) < new Date(firstOrderPerVariantMap.get(variantId).order.orderDate)) {
+                    firstOrderPerVariantMap.set(variantId, { order, item });
+                }
+            }
+        });
+
+        // Get all orders that don't meet the criteria
+        const nonMatchingOrders = allItems.filter(({ order, item }) => {
+            const variantId = item.variant_id;
+            return !(item.committed_Stock === item.onHand_Stock && item.available_Stock < 0) && !firstOrderPerVariantMap.has(variantId);
+        });
+
+        // Combine filtered orders and non-matching orders
+        const filteredOrders = Array.from(firstOrderPerVariantMap.values()).concat(nonMatchingOrders);
+
+        // Generate the rows for the DataTable
+        return filteredOrders.map(({ order, item }) => [
+            order.orderId,
+            order.orderNumber,
+            order.customer && order.customer.first_name && order.customer.last_name
+                ? `${order.customer.first_name} ${order.customer.last_name}`
+                : 'No Customer',
+            `Rs ${order.total_price}`,
+            order.financial_status,
+            order.fulfillment_status || 'Unfulfilled',
+            `${item.committed_Stock} items`,
+            `${item.onHand_Stock || 0} in Stock`,
+        ]);
     }, [ordersData]);
+
+    
 
     return (
         <Page 
@@ -110,8 +169,8 @@ export function OrdersReadyToShip() {
                     <LegacyCard style={{ marginBottom: '20px' }}>
                         <DataTable
                             rows={rows}
-                            columnContentTypes={['numeric', 'text', 'text', 'text', 'text', 'text', 'text', 'numeric']}
-                            headings={['Order ID', 'Order' ,'Customer', 'Total', 'Payment status', 'Fulfillment status', 'Items', 'Inventory Level']}
+                            columnContentTypes={['numeric', 'text', 'text', 'text', 'text', 'text', 'text','text']}
+                            headings={['Order ID', 'Order' ,'Customer', 'Total', 'Payment status', 'Fulfillment status', 'Committed Items', 'Inventory Level']}
                             sortable={[false, true, true, true, false, false, true]}
                             hasZebraStripingOnData
                             hideScrollIndicator={true}

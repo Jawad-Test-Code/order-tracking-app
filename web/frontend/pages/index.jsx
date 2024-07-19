@@ -37,8 +37,6 @@ export default function HomePage() {
         </Layout.Section>
       </Layout>
 
-
-
       {/* <Layout style={{ marginTop:'10px' }} >
         <Layout.Section>
           <ProductsCard />
