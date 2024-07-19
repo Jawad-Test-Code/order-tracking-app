@@ -1,5 +1,4 @@
 {
-  "version": 2,
   "builds": [
     {
       "src": "web/frontend/package.json",
@@ -7,6 +6,20 @@
       "config": {
         "distDir": "web/frontend/dist/"
       }
+    },
+    {
+      "src": "./web/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/web/frontend/dist"
+    },
+    {
+      "src": "/web/(.*)",
+      "dest": "/web"
     }
   ]
 }
