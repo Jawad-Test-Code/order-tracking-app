@@ -2,14 +2,25 @@
   "version": 2,
   "builds": [
     {
-      "src": "web/frontend/components/OrdersReadyToShip.jsx",
+      "src": "web/frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "web/frontend/build"
+      }
+    },
+    {
+      "src": "api/**/*.js",
       "use": "@vercel/node"
     }
   ],
-  "routes" : [
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
     {
       "src": "/(.*)",
-      "dest": "/"
+      "dest": "/web/frontend/build/$1"
     }
   ]
 }
